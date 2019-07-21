@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <title>LocalSlideShow</title>
+  <link rel="icon" href="favicon.png">
   <style>
     body {
       min-width: 600px;
@@ -53,7 +54,7 @@
       margin-bottom: 1em;
     }
 
-    .lss-thumbnail {
+    .lss-fixed {
       margin: 0px;
       padding: 0px;
       width: 100%;
@@ -62,7 +63,7 @@
       text-align: center;
     }
 
-    .lss-thumbnail img {
+    .lss-fixed img {
       max-width: 100%;
       max-height: 100%;
     }
@@ -117,8 +118,8 @@
       </div>
       <div class="lss-controlls">
         <div style="float: left;">
-          <input type="radio" name="slide-size" id="thumbnail" value="lss-thumbnail" checked="checked" disabled><label
-            for="thumbnail" data-i18n="thumbnail">サムネイル</label>
+          <input type="radio" name="slide-size" id="fixed" value="lss-fixed" checked="checked" disabled><label
+            for="fixed" data-i18n="fixed">固定サイズ</label>
         </div>
         <div style="float: left;">
           <input type="radio" name="slide-size" id="original" value="lss-original" disabled><label for="original"
@@ -141,11 +142,11 @@
   </div>
   <div class="center">
     <div class="flex-left">
-      <div id="slide" class="lss-thumbnail">
+      <div id="slide" class="lss-fixed">
         <ul class="lss-help">
           <li data-i18n="help1">参照ボタンで画像ファイルを選択（複数選択可能）</li>
           <li data-i18n="help2">開始ボタン、停止ボタンまたはスペースキーでアニメーションの開始、停止を切り替え</li>
-          <li data-i18n="help3">ウィンドウ内最大で表示中に画面をクリック、またはキーボードのEscでサムネイル表示に戻る</li>
+          <li data-i18n="help3">ウィンドウ内最大で表示中に画面をクリック、またはキーボードのEscで固定サイズ表示に戻る</li>
           <li data-i18n="help4">フルスクリーン化はF11キー等、ブラウザの機能を使ってください</li>
           <li data-i18n="help5">キーボードの左キー、右キーで表示する画像を変更</li>
         </ul>
@@ -387,7 +388,7 @@
     };
 
     this.SLIDE_SIZE = {
-      thumbnail: 'lss-thumbnail',
+      fixed: 'lss-fixed',
       original: 'lss-original',
       full: 'lss-full',
     };
@@ -605,7 +606,7 @@
         this.indexes = [];
         this.index = 0;
         this.hasBeenShown = false;
-        this.slideSize = SLIDE_SIZE.thumbnail;
+        this.slideSize = SLIDE_SIZE.fixed;
 
         observer.add(EVENT.onChangeImageFiles, (images) => {
           this.images = images;
@@ -711,19 +712,19 @@
             event.preventDefault();
           }
           else if (event.key === "Escape") {
-            const thumbnailButton = document.getElementById('thumbnail');
-            if (!thumbnailButton.disabled) {
-              thumbnailButton.click();
+            const fixedButton = document.getElementById('fixed');
+            if (!fixedButton.disabled) {
+              fixedButton.click();
             }
             event.preventDefault();
           }
         };
 
         document.getElementById('slide').addEventListener('click', () => {
-          const thumbnailButton = document.getElementById('thumbnail');
+          const fixedButton = document.getElementById('fixed');
           const fullButton = document.getElementById('full');
-          if (!thumbnailButton.disabled && fullButton.checked) {
-            thumbnailButton.click();
+          if (!fixedButton.disabled && fullButton.checked) {
+            fixedButton.click();
           }
         });
       }
