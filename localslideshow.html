@@ -652,6 +652,8 @@
             this.slideTag.textContent = null;
             if (this.slideSize === SLIDE_SIZE.full) {
               this.slideTag.style.backgroundImage = 'url(' + event.target.result + ')';
+              this.slideTag.style.width = '';
+              this.slideTag.style.height = '';
             }
             else {
               let imgTag = document.createElement('img');
