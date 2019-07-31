@@ -110,31 +110,30 @@
     <div class="flex-left">
       <div class="lss-controlls">
         <input type="file" id="files" accept="image/*" multiple style="display: none;" />
-        <button onclick="document.getElementById('files').click()" data-i18n="choose files">ファイル選択</button>
-        <p><span id="file-count">0</span><span data-i18n="file(s) selected">個選択中</span></p>
+        <button onclick="document.getElementById('files').click()">ファイル選択</button>
+        <p><span id="file-count">0</span>個選択中</p>
       </div>
       <div class="lss-controlls">
-        <span data-i18n="interval" style="margin-right: 0.5em;">インターバル</span><input id="interval" type="number"
-          maxlength="3" min="1" max="999" value="10">
+        <span style="margin-right: 0.5em;">インターバル</span><input id="interval" type="number" maxlength="3" min="1"
+          max="999" value="10">
         <br>
-        <button id="start" type="button" disabled data-i18n="start">開始</button>
-        <button id="stop" type="button" class="hidden" data-i18n="stop">停止</button>
+        <button id="start" type="button" disabled>開始</button>
+        <button id="stop" type="button" class="hidden">停止</button>
       </div>
       <div class="lss-controlls">
         <div style="float: left;">
           <input type="radio" name="slide-size" id="fixed" value="lss-fixed" checked="checked" disabled><label
-            for="fixed" data-i18n="fixed">固定サイズ</label>
+            for="fixed">固定サイズ</label>
         </div>
         <div style="float: left;">
-          <input type="radio" name="slide-size" id="original" value="lss-original" disabled><label for="original"
-            data-i18n="original">原寸大</label>
+          <input type="radio" name="slide-size" id="original" value="lss-original" disabled><label
+            for="original">原寸大</label>
         </div>
         <div style="float: left;">
-          <input type="radio" name="slide-size" id="full" value="lss-full" disabled><label for="full"
-            data-i18n="fit to window">ウィンドウ内最大</label>
+          <input type="radio" name="slide-size" id="full" value="lss-full" disabled><label for="full">ウィンドウ内最大</label>
         </div>
         <div style="clear: both;">
-          <input type="checkbox" id="random"><label for="random" data-i18n="random">ランダム</label>
+          <input type="checkbox" id="random"><label for="random">ランダム</label>
         </div>
       </div>
     </div>
@@ -148,11 +147,11 @@
     <div class="flex-left">
       <div id="slide" class="lss-fixed">
         <ul class="lss-help">
-          <li data-i18n="help1">参照ボタンで画像ファイルを選択（複数選択可能）</li>
-          <li data-i18n="help2">開始ボタン、停止ボタンまたはスペースキーでアニメーションの開始、停止を切り替え</li>
-          <li data-i18n="help3">ウィンドウ内最大で表示中に画面をクリック、またはキーボードのEscで固定サイズ表示に戻る</li>
-          <li data-i18n="help4">フルスクリーン化はF11キー等、ブラウザの機能を使ってください</li>
-          <li data-i18n="help5">キーボードの左キー、右キーで表示する画像を変更</li>
+          <li></li>参照ボタンで画像ファイルを選択（複数選択可能）</li>
+          <li>開始ボタン、停止ボタンまたはスペースキーでアニメーションの開始、停止を切り替え</li>
+          <li>ウィンドウ内最大で表示中に画面をクリック、またはキーボードのEscで固定サイズ表示に戻る</li>
+          <li>フルスクリーン化はF11キー等、ブラウザの機能を使ってください</li>
+          <li>キーボードの左キー、右キーで表示する画像を変更</li>
         </ul>
       </div>
     </div>
