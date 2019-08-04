@@ -8,7 +8,7 @@
   <style>
     body {
       min-width: 600px;
-      background: #F0F0FF;
+      background: white;
     }
 
     button {
@@ -56,14 +56,9 @@
     }
 
     .lss-fixed {
-      margin: 0 0 300px 0;
-      padding: 0 10px 10px 0;
-      width: 100%;
-      height: 75vh;
-      position: static;
+      height: calc(100vh - 12em);
+      overflow: visible;
       text-align: center;
-      resize: both;
-      overflow: hidden;
       background: white;
     }
 
@@ -96,6 +91,7 @@
 
     .lss-help {
       text-align: left;
+      margin: 1em;
     }
 
     #interval {
@@ -147,7 +143,7 @@
     <div class="flex-left">
       <div id="slide" class="lss-fixed">
         <ul class="lss-help">
-          <li></li>参照ボタンで画像ファイルを選択（複数選択可能）</li>
+          <li>参照ボタンで画像ファイルを選択（複数選択可能）</li>
           <li>開始ボタン、停止ボタンまたはスペースキーでアニメーションの開始、停止を切り替え</li>
           <li>ウィンドウ内最大で表示中に画面をクリック、またはキーボードのEscで固定サイズ表示に戻る</li>
           <li>フルスクリーン化はF11キー等、ブラウザの機能を使ってください</li>
@@ -353,25 +349,6 @@
             }
           });
         }
-      }
-    }
-
-    //
-    // i18n
-    //
-    class I18n {
-      /**
-       * @param dictionary A dictionary object.
-       */
-      constructor(dictionary) {
-        this.dictionary = dictionary;
-      }
-
-      /**
-       * @param language The destination language.
-       */
-      translate(language) {
-        // TODO
       }
     }
 
@@ -604,17 +581,16 @@
        */
       constructor(observer) {
         this.slideTag = document.getElementById('slide');
-        this.images = undefined;    // TODO
+        this.images = undefined;
         this.isRandom = false;
         this.indexes = [];
         this.index = 0;
-        this.hasBeenShown = false;
         this.slideSize = SLIDE_SIZE.fixed;
 
         observer.add(EVENT.onChangeImageFiles, (images) => {
           this.images = images;
           this._initIndexes();
-          if (!this.hasBeenShown && this.indexes.length) {
+          if (this.indexes.length) {
             this.index = this.indexes[0];
             this._display();
           }
