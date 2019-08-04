@@ -55,16 +55,15 @@
       margin-bottom: 1em;
     }
 
-    .lss-fixed {
+    .lss-standard {
+      width: calc(100vw - 12em);
       height: calc(100vh - 12em);
       overflow: visible;
       text-align: center;
       background: white;
-    }
-
-    .lss-fixed img {
-      max-width: 100%;
-      max-height: 100%;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center center;
     }
 
     .lss-original {
@@ -118,8 +117,8 @@
       </div>
       <div class="lss-controlls">
         <div style="float: left;">
-          <input type="radio" name="slide-size" id="fixed" value="lss-fixed" checked="checked" disabled><label
-            for="fixed">固定サイズ</label>
+          <input type="radio" name="slide-size" id="standard" value="lss-standard" checked="checked" disabled><label
+            for="standard">標準</label>
         </div>
         <div style="float: left;">
           <input type="radio" name="slide-size" id="original" value="lss-original" disabled><label
@@ -141,11 +140,11 @@
   </div>
   <div class="center">
     <div class="flex-left">
-      <div id="slide" class="lss-fixed">
+      <div id="slide" class="lss-standard">
         <ul class="lss-help">
           <li>参照ボタンで画像ファイルを選択（複数選択可能）</li>
           <li>開始ボタン、停止ボタンまたはスペースキーでアニメーションの開始、停止を切り替え</li>
-          <li>ウィンドウ内最大で表示中に画面をクリック、またはキーボードのEscで固定サイズ表示に戻る</li>
+          <li>ウィンドウ内最大で表示中に画面をクリック、またはキーボードのEscで標準サイズ表示に戻る</li>
           <li>フルスクリーン化はF11キー等、ブラウザの機能を使ってください</li>
           <li>キーボードの左キー、右キーで表示する画像を変更</li>
         </ul>
@@ -368,7 +367,7 @@
     };
 
     this.SLIDE_SIZE = {
-      fixed: 'lss-fixed',
+      standard: 'lss-standard',
       original: 'lss-original',
       full: 'lss-full',
     };
@@ -585,7 +584,7 @@
         this.isRandom = false;
         this.indexes = [];
         this.index = 0;
-        this.slideSize = SLIDE_SIZE.fixed;
+        this.slideSize = SLIDE_SIZE.standard;
 
         observer.add(EVENT.onChangeImageFiles, (images) => {
           this.images = images;
@@ -630,7 +629,9 @@
               this.slideTag.style.width = '';
               this.slideTag.style.height = '';
             }
-            else {
+            else if (this.slideSize === SLIDE_SIZE.standard) {
+              this.slideTag.style.backgroundImage = 'url(' + event.target.result + ')';
+            } else {
               let imgTag = document.createElement('img');
               imgTag.setAttribute('src', event.target.result);
               this.slideTag.insertBefore(imgTag, null);
@@ -693,19 +694,19 @@
             event.preventDefault();
           }
           else if (event.key === "Escape") {
-            const fixedButton = document.getElementById('fixed');
-            if (!fixedButton.disabled) {
-              fixedButton.click();
+            const standardButton = document.getElementById('standard');
+            if (!standardButton.disabled) {
+              standardButton.click();
             }
             event.preventDefault();
           }
         };
 
         document.getElementById('slide').addEventListener('click', () => {
-          const fixedButton = document.getElementById('fixed');
+          const standardButton = document.getElementById('standard');
           const fullButton = document.getElementById('full');
-          if (!fixedButton.disabled && fullButton.checked) {
-            fixedButton.click();
+          if (!standardButton.disabled && fullButton.checked) {
+            standardButton.click();
           }
         });
       }
