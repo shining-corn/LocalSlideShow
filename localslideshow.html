@@ -9,6 +9,7 @@
     body {
       min-width: 600px;
       background: black;
+      color: white;
     }
 
     button {
@@ -42,6 +43,7 @@
       margin-right: 0.5em;
       padding: 0.5em;
       background-color: #CCFFFF;
+      color: black;
       border-radius: 1em;
     }
 
@@ -57,6 +59,16 @@
 
     .lss-standard {
       width: calc(100vw - 12em);
+      height: calc(100vh - 12em);
+      overflow: visible;
+      text-align: center;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center center;
+    }
+
+    .lss-standard-half {
+      width: calc((100vw - 12em) / 2);
       height: calc(100vh - 12em);
       overflow: visible;
       text-align: center;
@@ -87,10 +99,43 @@
       cursor: none;
     }
 
+    .lss-full-half-left {
+      margin: 0px;
+      padding: 0px;
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      width: 50vw;
+      height: 100vh;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-color: black;
+      cursor: none;
+    }
+
+    .lss-full-half-right {
+      margin: 0px;
+      padding: 0px;
+      position: absolute;
+      left: 50vw;
+      top: 0px;
+      width: 50vw;
+      height: 100vh;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-color: black;
+      cursor: none;
+    }
+
     .lss-help {
       text-align: left;
       margin: 1em;
-      color: white;
+    }
+
+    #slide-container {
+      display:inline-flex;
     }
 
     #interval {
@@ -109,11 +154,14 @@
         <p><span id="file-count">0</span>個選択中</p>
       </div>
       <div class="lss-controlls">
-        <span style="margin-right: 0.5em;">インターバル</span><input id="interval" type="number" maxlength="3" min="1"
+        <div>
+          <span style="margin-right: 0.5em;">インターバル</span><input id="interval" type="number" maxlength="3" min="1"
           max="999" value="10">
-        <br>
-        <button id="start" type="button" disabled>開始</button>
-        <button id="stop" type="button" class="hidden">停止</button>
+        </div>
+        <div>
+          <button id="start" type="button" disabled>開始</button>
+          <button id="stop" type="button" class="hidden">停止</button>
+        </div>
       </div>
       <div class="lss-controlls">
         <div style="float: left;">
@@ -131,6 +179,16 @@
           <input type="checkbox" id="random"><label for="random">ランダム</label>
         </div>
       </div>
+      <div class="lss-controlls">
+        <div>
+          <input type="radio" name="slide-type" id="one" value="one" checked disabled><label for="one">1枚表示</label>
+          <input type="radio" name="slide-type" id="left-to-right" value="left-to-right" disabled><label for="left-to-right">2枚表示（→）</label>
+          <input type="radio" name="slide-type" id="right-to-left" value="right-to-left" disabled><label for="right-to-left">2枚表示（←）</label>
+        </div>
+        <div>
+          <input type="checkbox" id="slide-adjacent" disabled><label for="slide-adjacent">隙間をなくす</label>
+        </div>
+      </div>
     </div>
     <div class="lss-slide-controlls">
       <button type="button" id="prev" disabled>←</button>
@@ -140,14 +198,17 @@
   </div>
   <div class="center">
     <div class="flex-left">
-      <div id="slide" class="lss-standard">
-        <ul class="lss-help">
-          <li>参照ボタンで画像ファイルを選択（複数選択可能）</li>
-          <li>開始ボタン、停止ボタンまたはスペースキーでアニメーションの開始、停止を切り替え</li>
-          <li>ウィンドウ内最大で表示中に画面をクリック、またはキーボードのEscで標準サイズ表示に戻る</li>
-          <li>フルスクリーン化はF11キー等、ブラウザの機能を使ってください</li>
-          <li>キーボードの左キー、右キーで表示する画像を変更</li>
-        </ul>
+      <div id="slide-container">
+        <div id="slide1" class="lss-standard">
+          <ul class="lss-help">
+            <li>参照ボタンで画像ファイルを選択（複数選択可能）</li>
+            <li>開始ボタン、停止ボタンまたはスペースキーでアニメーションの開始、停止を切り替え</li>
+            <li>ウィンドウ内最大で表示中に画面をクリック、またはキーボードのEscで標準サイズ表示に戻る</li>
+            <li>フルスクリーン化はブラウザの機能（F11キー）で切り替え</li>
+            <li>キーボードの左キー、右キーで表示する画像を変更</li>
+          </ul>
+        </div>
+        <div id="slide2" class="lss-standard" style="display:none;"></div>
       </div>
     </div>
   </div>
@@ -189,7 +250,7 @@
         if (this.tagId) {
           let tag = document.getElementById(this.tagId);
           if (tag) {
-            tag.onchange = (() => {
+            tag.addEventListener('change', () => {
               return ((event) => {
                 if (!isUndefined(obj) && !isUndefined(key)) {
                   if (event.target.tagName === 'INPUT' && event.target.type === 'checkbox') {
@@ -364,12 +425,20 @@
       randomOff: 'randomOff',
       moveSlide: 'moveSlide',
       changeSlideSize: 'changeSlideSize',
+      changeSlideType: 'changeSlideType',
+      changeSlideAdjacent: 'changeSlideAdjacent',
     };
 
     this.SLIDE_SIZE = {
       standard: 'lss-standard',
       original: 'lss-original',
       full: 'lss-full',
+    };
+
+    this.SLIDE_TYPE = {
+      one: 'one',
+      leftToRight: 'left-to-right',
+      rightToLeft: 'right-to-left',
     };
 
     class ImageFileStore {
@@ -477,21 +546,62 @@
       constructor(observer) {
         this.observer = observer;
         this.slideSizeAccessor = new DomAccessor(null, 'slide-size');
+        this.slideTypeAccessor = new DomAccessor(null, 'slide-type');
+        this.slideAdjecentTag = document.getElementById('slide-adjacent');
+        this.randomTag = document.getElementById('random');
 
         observer.add(EVENT.onChangeImageFiles, () => {
           this.slideSizeAccessor.enable();
+          this.slideTypeAccessor.enable();
         });
 
-        this.slideSizeAccessor.addEventListener('change', (event) => {
+        observer.add(EVENT.changeSlideType, (slideType) => {
+          if (slideType === SLIDE_TYPE.one) {
+            this.randomTag.disabled = false;
+          }
+          else {
+            this.randomTag.checked = false;
+            this.randomTag.disabled = true;
+          }
+        });
+
+        this.slideSizeAccessor.addEventListener('change', () => {
           this.observer.notify(EVENT.changeSlideSize, this.slideSizeAccessor.getValue());
         });
 
         this._initRandomCheckbox();
+
+        this.slideTypeAccessor.addEventListener('change', () => {
+          const slideType = this.slideTypeAccessor.getValue();
+          this.observer.notify(EVENT.changeSlideType, slideType);
+
+          if (slideType !== SLIDE_TYPE.one) {
+            this.slideAdjecentTag.disabled = false;
+          }
+          else {
+            this.observer.notify(EVENT.changeSlideAdjacent, false);
+            this.slideAdjecentTag.checked = false;
+            this.slideAdjecentTag.disabled = true;
+          }
+        });
+        
+        const disableFullscreen = () => {
+          const standardButton = document.getElementById('standard');
+          const fullButton = document.getElementById('full');
+          if (!standardButton.disabled && fullButton.checked) {
+            standardButton.click();
+          }
+        };
+        document.getElementById('slide1').addEventListener('click', disableFullscreen);
+        document.getElementById('slide2').addEventListener('click', disableFullscreen);
+
+        this.slideAdjecentTag.addEventListener('change', () => {
+          this.observer.notify(EVENT.changeSlideAdjacent, this.slideAdjecentTag.checked);
+        });
       }
 
       _initRandomCheckbox() {
-        let randomTag = document.getElementById('random');
-        randomTag.addEventListener('change', (event) => {
+        this.randomTag.addEventListener('change', (event) => {
           if (event.target.checked) {
             this.observer.notify(EVENT.randomOn);
           }
@@ -515,6 +625,7 @@
         this.slidePositionAccessor = new DomAccessor('position');
         this.maxAccessor = new DomAccessor('max');
         this.timer = undefined;
+        this.slideType = SLIDE_TYPE.one;
 
         observer.add(EVENT.onChangeImageFiles, (images) => {
           this.slideMax = images.length;
@@ -539,7 +650,76 @@
           clearInterval(this.timer);
         });
 
+        observer.add(EVENT.changeSlideType, (slideType) => {
+          this.slideType = slideType;
+          this.slidePosition = 0;
+          this.slidePositionAccessor.setValue(this.slidePosition + 1);
+        });
+
         this._initButtons();
+
+        const clickNextButton = () => {
+          const nextButton = document.getElementById('next');
+          if (!nextButton.disabled) {
+            nextButton.click();
+          }
+        };
+        const clickPrevButton = () => {
+          const leftButton = document.getElementById('prev');
+          if (!leftButton.disabled) {
+            leftButton.click();
+          }
+        }
+
+        document.addEventListener('wheel', (event) => {
+          if (event.wheelDelta > 0) {
+            if (this.slideType === SLIDE_TYPE.rightToLeft) {
+              clickNextButton();
+            }
+            else {
+              clickPrevButton();
+            }
+            event.preventDefault();
+          }
+          else {
+            if (this.slideType === SLIDE_TYPE.rightToLeft) {
+              clickPrevButton();
+            }
+            else {
+              clickNextButton();
+            }
+            event.preventDefault();
+          }
+        }, { passive: false });
+
+        document.addEventListener('keydown', (event) => {
+          if (event.key === "ArrowRight") {
+            clickNextButton();
+            event.preventDefault();
+          }
+          else if (event.key === "ArrowLeft") {
+            clickPrevButton();
+            event.preventDefault();
+          }
+          else if (event.key === " ") {
+            const startButton = document.getElementById('start');
+            const stopButton = document.getElementById('stop');
+            if (!startButton.disabled && startButton.className.indexOf('hidden') === -1) {
+              startButton.click();
+            }
+            else if (!stopButton.disabled && stopButton.className.indexOf('hidden') === -1) {
+              stopButton.click();
+            }
+            event.preventDefault();
+          }
+          else if (event.key === "Escape") {
+            const standardButton = document.getElementById('standard');
+            if (!standardButton.disabled) {
+              standardButton.click();
+            }
+            event.preventDefault();
+          }
+        });
       }
 
       _initButtons() {
@@ -547,18 +727,31 @@
         let nextButton = document.getElementById('next');
 
         prevButton.addEventListener('click', (event) => {
-          this._decreaseSlidePosition();
+          if (this.slideType === SLIDE_TYPE.rightToLeft) {
+            this._increaseSlidePosition();
+          }
+          else {
+            this._decreaseSlidePosition();
+          }
           this.observer.notify(EVENT.moveSlide, this.slidePosition);
         });
 
         nextButton.addEventListener('click', (event) => {
-          this._increaseSlidePosition();
+          if (this.slideType === SLIDE_TYPE.rightToLeft) {
+            this._decreaseSlidePosition();
+          }
+          else {
+            this._increaseSlidePosition();
+          }
           this.observer.notify(EVENT.moveSlide, this.slidePosition);
         })
       }
 
       _increaseSlidePosition() {
         this.slidePosition++;
+        if (this.slideType !== SLIDE_TYPE.one) {
+          this.slidePosition++;
+        }
         if (this.slidePosition >= this.slideMax) {
           this.slidePosition = 0;
         }
@@ -567,6 +760,9 @@
 
       _decreaseSlidePosition() {
         this.slidePosition--;
+        if (this.slideType !== SLIDE_TYPE.one) {
+          this.slidePosition--;
+        }
         if (this.slidePosition < 0) {
           this.slidePosition = this.slideMax ? this.slideMax - 1 : 0;
         }
@@ -579,12 +775,14 @@
        * @param observer A event observer.
        */
       constructor(observer) {
-        this.slideTag = document.getElementById('slide');
+        this.slideTag1 = document.getElementById('slide1');
+        this.slideTag2 = document.getElementById('slide2');
         this.images = undefined;
         this.isRandom = false;
         this.indexes = [];
         this.index = 0;
         this.slideSize = SLIDE_SIZE.standard;
+        this.slideType = SLIDE_TYPE.one;
 
         observer.add(EVENT.onChangeImageFiles, (images) => {
           this.images = images;
@@ -612,34 +810,76 @@
           }
         });
 
-        observer.add(EVENT.changeSlideSize, (size) => {
-          this.slideSize = size;
+        observer.add(EVENT.changeSlideSize, (slideSize) => {
+          this.slideSize = slideSize;
+          this._changeSlideStyle();
           this._display();
-          this.slideTag.className = size;
+        });
+
+        observer.add(EVENT.changeSlideType, (slideType) => {
+          this.slideType = slideType;
+          this.index = 0;
+          this._changeSlideStyle();
+          this._display();
+
+          if (slideType !== SLIDE_TYPE.one) {
+            observer.notify(EVENT.randomOff);
+          }
+        });
+
+        observer.add(EVENT.changeSlideAdjacent, (value) => {
+          if (value) {
+            if (this.slideType === SLIDE_TYPE.leftToRight) {
+              document.getElementById('slide1').style.backgroundPosition = 'right center';
+              document.getElementById('slide2').style.backgroundPosition = 'left center';
+            }
+            else {
+              document.getElementById('slide1').style.backgroundPosition = 'left center';
+              document.getElementById('slide2').style.backgroundPosition = 'right center';
+            }
+          }
+          else {
+              document.getElementById('slide1').style.backgroundPosition = 'center center';
+              document.getElementById('slide2').style.backgroundPosition = 'center center';
+          }
         });
       }
 
       _display() {
-        if (this.index < this.images.length) {
-          let reader = new FileReader();
+        const fileReaderFactory = (tag) => {
+          const reader = new FileReader();
           reader.onload = (event) => {
-            this.slideTag.textContent = null;
+            tag.textContent = null;
             if (this.slideSize === SLIDE_SIZE.full) {
-              this.slideTag.style.backgroundImage = 'url(' + event.target.result + ')';
-              this.slideTag.style.width = '';
-              this.slideTag.style.height = '';
+              tag.style.backgroundImage = 'url(' + event.target.result + ')';
+              tag.style.width = '';
+              tag.style.height = '';
             }
             else if (this.slideSize === SLIDE_SIZE.standard) {
-              this.slideTag.style.backgroundImage = 'url(' + event.target.result + ')';
+              tag.style.backgroundImage = 'url(' + event.target.result + ')';
             } else {
               let imgTag = document.createElement('img');
               imgTag.setAttribute('src', event.target.result);
-              this.slideTag.insertBefore(imgTag, null);
-              this.slideTag.style.backgroundImage = '';
+              tag.insertBefore(imgTag, null);
+              tag.style.backgroundImage = '';
             }
           };
 
-          reader.readAsDataURL(this.images[this.index]);
+          return reader;
+        };
+
+        if (this.index < this.images.length) {
+          fileReaderFactory(this.slideTag1).readAsDataURL(this.images[this.index]);
+        }
+
+        if (this.slideType !== SLIDE_TYPE.one) {
+          if (this.index + 1 < this.images.length) {
+            fileReaderFactory(this.slideTag2).readAsDataURL(this.images[this.index + 1]);
+          }
+          else {
+            this.slideTag2.innerHTML = '';
+            this.slideTag2.style.backgroundImage = 'none';
+          }
         }
       }
 
@@ -654,61 +894,54 @@
           }
         }
       }
+
+      _changeSlideStyle() {
+        if (this.slideType === SLIDE_TYPE.one) {
+          this.slideTag1.className = this.slideSize;
+          this.slideTag2.style.display = 'none';
+        }
+        else {
+          switch (this.slideSize) {
+            case SLIDE_SIZE.standard:
+              this.slideTag1.className = 'lss-standard-half';
+              this.slideTag2.className = 'lss-standard-half';
+              break;
+            case SLIDE_SIZE.full:
+              if (this.slideType === SLIDE_TYPE.leftToRight) {
+                this.slideTag1.className = 'lss-full-half-left';
+                this.slideTag2.className = 'lss-full-half-right';
+              }
+              else {
+                this.slideTag1.className = 'lss-full-half-right';
+                this.slideTag2.className = 'lss-full-half-left';
+              }
+              break;
+            default:
+              this.slideTag1.className = 'lss-original';
+              this.slideTag2.className = 'lss-original';
+              break;
+          }
+
+          this.slideTag2.style.display = 'block';
+          if (this.slideType === SLIDE_TYPE.leftToRight) {
+            document.getElementById('slide-container').style.flexDirection = 'row';
+          }
+          else if (this.slideType === SLIDE_TYPE.rightToLeft) {
+            document.getElementById('slide-container').style.flexDirection = 'row-reverse';
+          }
+        }
+      }
     }
 
     class Application {
       constructor() {
         let observer = new Observer();
-
         this.imageFileStore = new ImageFileStore(observer);
         this.fileSelector = new FileSelector(observer);
         this.annimationControlPanel = new AnnimationControlPanel(observer);
         this.SlideConfigPanel = new SlideConfigPanel(observer);
         this.slideControlPanel = new SlideControlPanel(observer);
         this.slidePanel = new SlidePanel(observer);
-
-        document.onkeydown = (event) => {
-          if (event.key === "ArrowRight") {
-            const rightButton = document.getElementById('next');
-            if (!rightButton.disabled) {
-              rightButton.click();
-            }
-            event.preventDefault();
-          }
-          else if (event.key === "ArrowLeft") {
-            const leftButton = document.getElementById('prev');
-            if (!leftButton.disabled) {
-              leftButton.click();
-            }
-            event.preventDefault();
-          }
-          else if (event.key === " ") {
-            const startButton = document.getElementById('start');
-            const stopButton = document.getElementById('stop');
-            if (!startButton.disabled && startButton.className.indexOf('hidden') === -1) {
-              startButton.click();
-            }
-            else if (!stopButton.disabled && stopButton.className.indexOf('hidden') === -1) {
-              stopButton.click();
-            }
-            event.preventDefault();
-          }
-          else if (event.key === "Escape") {
-            const standardButton = document.getElementById('standard');
-            if (!standardButton.disabled) {
-              standardButton.click();
-            }
-            event.preventDefault();
-          }
-        };
-
-        document.getElementById('slide').addEventListener('click', () => {
-          const standardButton = document.getElementById('standard');
-          const fullButton = document.getElementById('full');
-          if (!standardButton.disabled && fullButton.checked) {
-            standardButton.click();
-          }
-        });
       }
     }
 
